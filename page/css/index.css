@@ -1,0 +1,46 @@
+.cont_left{
+
+}
+.cont_right{
+
+}
+.every_day{
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 0 5px 2px #eeeeee;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+.article{
+    background: #ffffff;
+    box-shadow: 0 0 5px 2px #eeeeee;
+    border-radius: 5px;
+}
+.article_list{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.article_tit{
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    color: coral;
+}
+.article_con{
+    text-indent: 2em;
+    line-height: 1.5em;
+    vertical-align: middle;
+    max-height: 200px;
+    padding: 0 20px;
+}
+.article_foot{
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    background: #171717;
+    color: #fff;
+    padding-left: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
