@@ -1,45 +1,77 @@
-// use/entities/user.entity.ts
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import bcrypt from 'bcryptjs'
-@Entity('user')
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Role } from "./role.entity";
+
+@Entity({
+    name: 'user'
+})
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: number;
 
-  @Column({ length: 100 })
-  username: string; // 用户名
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ length: 100 })
-  nickname: string;  //昵称
+    @Column({
+        length: 50,
+        comment: '用户名'
+    })
+    username: string;
 
-  @Column()
-  password: string;  // 密码
+    @Column({
+        length: 50,
+        comment: '密码'
+    })
+    password: string;
 
-  @Column()
-  avatar: string;   //头像
+    @Column({
+        name: 'nick_name',
+        length: 50,
+        comment: '昵称'
+    })
+    nickName: string;
 
-  @Column()
-  email: string;
 
-  @Column('simple-enum', { enum: ['root', 'author', 'visitor'] })
-  role: string;   // 用户角色
+    @Column({
+        comment: '邮箱',
+        length: 50
+    })
+    email: string;
 
-  @Column({
-    name: 'create_time',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createTime: Date;
 
-  @Column({
-    name: 'update_time',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updateTime: Date;
-  
-  @BeforeInsert() 
-  async encryptPwd() { 
-    this.password = await bcrypt.hashSync(this.password); 
-  } 
+    @Column({
+        comment: '头像',
+        length: 100,
+        nullable: true
+    })
+    headPic: string;
+
+    @Column({
+        comment: '手机号',
+        length: 20,
+        nullable: true
+    })
+    phoneNumber: string;
+
+    @Column({
+        comment: '是否冻结',
+        default: false
+    })
+    isFrozen: boolean;
+
+    @Column({
+        comment: '是否是管理员',
+        default: false
+    })
+    isAdmin: boolean;
+
+    @CreateDateColumn()
+    createTime: Date;
+
+    @UpdateDateColumn()
+    updateTime: Date;
+
+    @ManyToMany(() => Role)
+    @JoinTable({
+        name: 'user_roles'
+    })
+    roles: Role[] 
 }
+

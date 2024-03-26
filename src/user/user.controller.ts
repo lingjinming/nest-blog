@@ -5,13 +5,23 @@ import {
   Delete,
   Get,
   Header,
+  Inject,
   Param,
   Post,
-  Put
+  Put,
+  Res,
+  ValidationPipe,
 } from '@nestjs/common';
-import { CreateUserDTO, EditUserDTO } from './dto/user.dto';
+import {
+  CreateUserDTO,
+  EditUserDTO,
+  LoginUserDto,
+  RegisterUserDto,
+} from './dto/user.dto';
 import { User } from '../interface/user/user.interface';
 import { UserService } from './user.service';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 interface UserResponse<T = unknown> {
   code: number;
@@ -19,67 +29,43 @@ interface UserResponse<T = unknown> {
   message: string;
 }
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // GET /user/users
-  @Get('users')
-  async findAll(): Promise<UserResponse<User[]>> {
-    return {
-      code: 200,
-      data: await this.userService.findAll(),
-      message: 'Success.'
-    };
+  @Inject(JwtService)
+  private jwtService: JwtService;
+
+  @ApiOperation({
+    summary: '用户注册',
+  })
+  @Post('register')
+  register(@Body(ValidationPipe) data: RegisterUserDto) {
+    return this.userService.register(data);
   }
 
-  // GET /user/:_id
-  @Get(':_id')
-  async findOne(@Param('_id') _id: string): Promise<UserResponse<User>> {
-    return {
-      code: 200,
-      data: await this.userService.findOne(_id),
-      message: 'Success.'
-    };
-  }
-  // POST /user
-  @Post()
-  async addOne(@Body() body: CreateUserDTO): Promise<UserResponse> {
-    console.log(body)
-    await this.userService.addOne(body);
-    return {
-      code: 200,
-      message: 'Success.'
-    };
-  }
+  @ApiOperation({
+    summary: '用户登录',
+  })
+  @Post('login')
+  async login(
+    @Body(ValidationPipe) user: LoginUserDto,
+    @Res({ passthrough: true }) res,
+  ) {
+    const foundUser = await this.userService.login(user);
 
-  // PUT /user/:_id
-  @Put(':_id')
-  async editOne(
-    @Param('_id') _id: string,
-    @Body() body: EditUserDTO
-  ): Promise<UserResponse> {
-    await this.userService.editOne(_id, body);
-    return {
-      code: 200,
-      message: 'Success.'
-    };
+    if (foundUser) {
+      const token = await this.jwtService.signAsync({
+        user: {
+          id: foundUser.id,
+          username: foundUser.username,
+        },
+      });
+      res.setHeader('token', token);
+      return 'login success';
+    } else {
+      return 'login fail';
+    }
   }
-
-  // DELETE /user/:_id
-  @Delete(':_id')
-  async deleteOne(@Param('_id') _id: string): Promise<UserResponse> {
-    await this.userService.deleteOne(_id);
-    return {
-      code: 200,
-      message: 'Success.'
-    };
-  }
-
-  // @Get('/file')
-  // @Header('Content-Disposition', 'attachment; filename=controller.js')
-  // getFile() {
-  //   const file = fs.readFileSync(join(__dirname, 'weather.controller.js'));
-  //   return file;
-  // }
 }
