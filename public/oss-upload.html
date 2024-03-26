@@ -15,20 +15,20 @@
       async function getOSSInfo() {
         await axios
           .post('http://localhost:3000/api/oss', {
-            // region: 'oss-cn-beijing',
-            // bucket: 'ming1993',
-            // accessKeyId: 'LTAI5tLUjgCdM1S4UBNi1gka',
-            // accessKeySecret: 'QynpU5erE8K5fVDyDo18dj0PzN66da',
+            region: 'oss-cn-beijing',
+            bucket: 'ming1993',
+            accessKeyId: 'LTAI5tLUjgCdM1S4UBNi1gka',
+            accessKeySecret: 'QynpU5erE8K5fVDyDo18dj0PzN66da',
           })
           .then((res) => {
             debugger;
           });
-        // return {
-        //     OSSAccessKeyId: 'LTAI5tLUjgCdM1S4UBNi1gka',
-        //     Signature: 'QynpU5erE8K5fVDyDo18dj0PzN66da',
-        //     policy: 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0yMFQwMzoyNjowOC4xMDZaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==',
-        //     host: 'http://ming1993.oss-cn-beijing.aliyuncs.com'
-        // }
+        return {
+            OSSAccessKeyId: 'LTAI5tLUjgCdM1S4UBNi1gka',
+            Signature: 'QynpU5erE8K5fVDyDo18dj0PzN66da',
+            policy: 'eyJleHBpcmF0aW9uIjoiMjAyNC0wMS0yMFQwMzoyNjowOC4xMDZaIiwiY29uZGl0aW9ucyI6W1siY29udGVudC1sZW5ndGgtcmFuZ2UiLDAsMTA0ODU3NjAwMF1dfQ==',
+            host: 'http://ming1993.oss-cn-beijing.aliyuncs.com'
+        }
       }
 
       fileInput.onchange = async () => {
